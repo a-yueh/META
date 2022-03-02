@@ -1,0 +1,246 @@
+###################
+## USER TOOLBARS ##
+###################
+include N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\DynamicStiffness\NVH_2D_Post_Toolbar.defaults
+include N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\DynamicStiffness\Statistical_Analysis.defaults
+include N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Fatigue_Toolbar\Fatigue_Event_Toolbar.defaults
+include N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\DynamicStiffness\Plot_Toolbar.defaults
+toolbar start MAGNA
+toolbar minmaxbuttons off
+toolbar tab 
+toolbar pagetab 3D Options tip= 3D Toolbar by Ashwin < >
+toolbar hsubgroup 
+toolbar subgroup Display Options
+toolbar button Remove 1D Elements       :model active all;erase global all all    ;add global shells all   ;add global solids all   ;add global planes all   ;add global cords all
+toolbar button Show Only Shell  :model active all;erase global all all    ;add global shells all   ;add global planes all
+toolbar button Show All :model active all;add global all all
+toolbar endgroup
+toolbar subgroup Window Options
+toolbar button Title Vertically :window vtile
+toolbar togbutton Sync All      :window enable and act   ;window enable all       ;model active all;window bisync all       |model active all;window bisync none
+toolbar menu Layouts 
+toolbar button 2 X 1 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/2x1.png>      :window arrange layout keepwindows 2
+toolbar button 2 X 2 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/2x2.png>      :window arrange layout keepwindows 4
+toolbar button 3 Vertical <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/3_vertical.png>  :window arrange layout keepwindows 6
+toolbar button (2,1)x2 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/(2,1)x2.png>:window arrange layout keepwindows 10
+toolbar button 3X2 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/3x2.png>:window arrange layout keepwindows 17
+toolbar button 2X3 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/2x3.png>:window arrange layout keepwindows 18
+toolbar button 3X3 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/3x3.png>:window arrange layout keepwindows 19
+toolbar endmenu
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Fringe Bars
+toolbar subgroup 
+toolbar button Damage   :color fringebar create rainbow "damage" 7       ;color fringebar scalarset "damage"      ;color fringebar update "damage" "Red,255_170_0_255,169_255_0_255,Green,0_255_170_255,DarkGray,DarkGray" ;color fringebar novaluecolor damage DarkGray            ;srange set 0,1  ;options fringebar format enabled fixed  ;options fringebar format enabled digits 1
+toolbar button Life     :color fringebar create rainbow "Life" 7 ;color fringebar scalarset "Life";color fringebar update "Life" "DarkGray,0_170_255_255,0_255_170_255,Green,169_255_0_255,255_170_0_255,Red"      ;color fringebar novaluecolor Life DarkGray      ;srange set 3.4,5,10,50,100,500  ;options fringebar format enabled fixed  ;options fringebar format enabled digits 1
+toolbar button Recalculate      :srange auto enable
+toolbar endgroup
+toolbar subgroup 
+toolbar text Max Range Limit    :options var string upper_limit {}       ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Scalar_Max_Min.py
+toolbar ontextexec 1
+toolbar text Min Range Limit    :options var string lower_limit {}       ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Scalar_Max_Min.py
+toolbar ontextexec 0
+toolbar toggle Inverse Colour Order     :opt fringe invert enabled on    |opt fringe invert enabled off
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Annotations
+toolbar subgroup Show Max
+toolbar menu Pick Property 
+toolbar button Max Elem :annotation add onparts pick centcornmax "\$fval"
+toolbar button Min Elem :annotation add onparts pick centcornmin "\$fval"
+toolbar endmenu
+toolbar menu Pick Material 
+toolbar button Max Elem :annotation add onmaterial pick elemmax "\$fval"
+toolbar button Min Elem :annotation add onmaterial pick elemmin "\$fval"
+toolbar endmenu
+toolbar menu All 
+toolbar button Element Max      :annotation add onselection elements funcmax visible "\$fval"
+toolbar button Element Min      :annotation add onselection elements funcmin visible "\$fval"
+toolbar button Disp Max :annotation add onselection grids funcmax visible "\$fval"
+toolbar button Disp Min :annotation add onselection grids funcmin visible "\$fval"
+toolbar endmenu
+toolbar endgroup
+toolbar subgroup Pick
+toolbar button Pick Element     :annotation add onelem pick "$val"
+toolbar button Pick Node        :annotation add onvisnodalids pick "$val"
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Advanced Filter
+toolbar subgroup 
+toolbar text Max of region for visible  :annotation add onelem advfilter active add:Elements:centroid.func.scalar.max:>{}:Max of Regions for Visible  ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Format_Annotations.py;
+toolbar text Min of region for visible  :annotation add onelem advfilter active add:Parts:all::Keep All%intersect:Elements:centroid.func.scalar.max:>0:Min of Regions for Each Part%intersect:Elements:centroid.func.scalar.min:<{}:Max of Regions for Each Part ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Format_Annotations.py  ;
+toolbar endgroup
+toolbar subgroup 
+toolbar button Format Annotations       :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Format_Annotations.py
+toolbar button Delete All Annotation    :
+toolbar script # PYTHON script\nimport meta\nfrom meta import annotations\nfrom meta import windows\ndef main():\n	all_windows = windows.Windows()\n	\n	for w in all_windows:\n		print(w.name, w.page_id, w.active, w.height, w.width, w.plot2d, w.enabled)\n		window_name = w.name\n		window_annotations = annotations.AnnotationsOfWindow(window_name)\n		\n		for a in window_annotations:\n			annotation_id = a.id\n			anno_type = annotations.TypeOfAnnotationPointer(annotation_id)\n			print(anno_type)\n			if anno_type != 'empty':\n				 annotations.DeleteAnnotation(annotation_id)\nif __name__ == '__main__':\n	main()
+toolbar button Delete By Window Annotation      :annotation del pick
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Annotation and Fringe Bar Settings
+toolbar subgroup 
+toolbar ctext Float Prec        :options fringebar format enabled digits {}      ;annotation select all   ;annotation text 1-20000 precision {}
+toolbar ontextexec 2
+toolbar historytext Float Prec : 0|1|2|3|4|5
+toolbar ctext Fringe Bar        :options fringebar format enabled {}
+toolbar ontextexec Fixed
+toolbar historytext Fringe Bar : Scientific|Auto|Fixed
+toolbar ctext Annotations       :annotation text 1-20000 format {}
+toolbar ontextexec Fixed
+toolbar historytext Annotations : Scientific|Auto|Fixed
+toolbar endgroup
+toolbar subgroup 
+toolbar text Enter Model Name   :options var string model_annotation {}  ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\model_name.py
+toolbar toggle Value Based Colour       :annotation select all   ;annotation extparam 1-20000 on  ;annotation extparam 1-20000 coloring on ;annotation text 1-20000 font "Calibri,16,-1,5,75,0,0,0,0,0"     |annotation select all   ;annotation extparam 1-20000 off ;annotation extparam 1-20000 coloring off;annotation background 1-20000 color auto on     ;annotation background 1-20000 color pident off  ;annotation background 1-20000 color manual White;annotation text 1-20000 font "Calibri,16,-1,5,75,0,0,0,0,0"
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Section Cuts
+toolbar menu Select Plane 
+toolbar button XY Plane :plane new default xy    ;plane edit interactive act
+toolbar button YZ Plane :plane new default yz    ;plane edit interactive act
+toolbar button ZX Plane :plane new default zx    ;plane edit interactive act
+toolbar button Custom - Pick 3 Nodes    :plane new "Custom" pick         ;plane edit interactive act
+toolbar endmenu
+toolbar button Clear Planes     :plane delete all
+toolbar endgroup
+toolbar subgroup Envelope
+toolbar ctext Enter Model Number        :{}:function maximum perlabel scalar all
+toolbar historytext Enter Model Number : 0|1|2|3|4|5|6|7|8|9|10
+toolbar endgroup
+toolbar hsubgroup Settings
+toolbar subgroup 
+toolbar toggle Draw Thick Shells        :style shellthick on     |style shellthick off
+toolbar toginit runoff
+toolbar toggle Bar/Beam Cross Section   :style barcrsec on       ;options session barsectoggle enable     ;options bpradius enable |style barcrsec off
+toolbar endgroup
+toolbar toggle Show Info        :options title on|options title off
+toolbar toginit on
+toolbar toggle Fringe Bar       :options fringebar on    |options fringebar off
+toolbar toginit on
+toolbar togbutton Transparency  :grstyle perpid on       ;color pid 234_229_255_76 pick   |grstyle perpid off
+toolbar endgroup
+toolbar text Animation Scale    :disp scale {}
+toolbar pagetab 2D Options tip= 3D Toolbar by Ashwin < >
+toolbar hsubgroup Window Options
+toolbar button Title Vertically :window vtile
+toolbar menu Layouts 
+toolbar button 2 X 1 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/2x1.png>      :window arrange layout keepwindows 2
+toolbar button 2 X 2 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/2x2.png>      :window arrange layout keepwindows 4
+toolbar button 3 Vertical <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/3_vertical.png>  :window arrange layout keepwindows 6
+toolbar button (2,1)x2 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/(2,1)x2.png>:window arrange layout keepwindows 10
+toolbar button 3X2 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/3x2.png>:window arrange layout keepwindows 17
+toolbar button 2X3 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/2x3.png>:window arrange layout keepwindows 18
+toolbar button 3X3 <N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/MACROS/META/Icons/3x3.png>:window arrange layout keepwindows 19
+toolbar endmenu
+toolbar endgroup
+toolbar hsubgroup Annotations
+toolbar subgroup 
+toolbar menu Show Max 
+toolbar button All      :annotation add oncurve act advfilter max add:Curves:visible::Keep All           ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Format_Annotations.py
+toolbar button Range    :opt var valuetext Xmin  ;opt var valuetext Xmax  ;annotation add oncurve act advfilter max add:Curves:xmin:<${Xmin}:Keep All%add:Curves:xmax:>${Xmax}:Keep All    ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Format_Annotations.py
+toolbar endmenu
+toolbar menu Show Min 
+toolbar button All      :annotation add oncurve act advfilter min add:Curves:visible::Keep All   ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Format_Annotations.py
+toolbar button Range    :
+toolbar endmenu
+toolbar button Pick Curve       :
+toolbar endgroup
+toolbar subgroup 
+toolbar button Delete All Annotation    :
+toolbar script # PYTHON script\nimport meta\nfrom meta import annotations\nfrom meta import windows\ndef main():\n	all_windows = windows.Windows()\n	\n	for w in all_windows:\n		print(w.name, w.page_id, w.active, w.height, w.width, w.plot2d, w.enabled)\n		window_name = w.name\n		window_annotations = annotations.AnnotationsOfWindow(window_name)\n		\n		for a in window_annotations:\n			annotation_id = a.id\n			anno_type = annotations.TypeOfAnnotationPointer(annotation_id)\n			print(anno_type)\n			if anno_type != 'empty':\n				 annotations.DeleteAnnotation(annotation_id)\nif __name__ == '__main__':\n	main()
+toolbar button Delete By Window Annotation      :annotation del pick
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Plot Curve 
+toolbar subgroup From Model
+toolbar menu Node 
+toolbar button Pick     :identify reset  ;identify history snode pick
+toolbar text By ID      :xyplot create IdeHistory1       ;window active "IdeHistory1"     ;xyplot frommodel nodes "IdeHistory1" 0 "{}" NodalFun Time all all slabel "Displacements,Magnitude"
+toolbar endmenu
+toolbar menu Element 
+toolbar button Pick     :identify reset  ;identify history selem pick
+toolbar ctext By ID     :
+toolbar endmenu
+toolbar endgroup
+toolbar menu Plot Force Vs Displacement Curve 
+toolbar button LS-Dyna  :opt var dirtext p0      ;opt var valuetext Nodeout       ;opt var valuetext rcforc;xyplot model active empty       ;xyplot model load binout ${p0}/*;xyplot create "FvsD Curve"      ;window maximize "FvsD Curve"    ;xyplot read lsdyna "FvsD Curve" "${p0}/*" nodout-Node ${Nodeout} Magnitude_of_displacement_(md) ;xyplot read lsdyna "FvsD Curve" "${p0}/*" rcforc-Master ${rcforc} Magnitude_of_force_(mf)       ;xyplot curve select "FvsD Curve" "1"    ;xyplot curve deselect "FvsD Curve" "1"  ;xyplot curve select "FvsD Curve" "2"    ;xyplot curve function userdef "User defined" "c1.y" "c2.y" "FvsD Curve" ;xyplot curve select "FvsD Curve" "1-2"  ;xyplot curve visible not "FvsD Curve" selected  ;xyplot curve deselect "FvsD Curve" "1-2";xyplot curve select "FvsD Curve" "3"    ;xyplot curve set name "FvsD Curve" 3 "FvsD Curve"       ;xyplot axisoptions xaxis deactive "FvsD Curve" 0 0      ;xyplot axisoptions caxis deactive "FvsD Curve" 0 0      ;xyplot axisoptions ylabel set "FvsD Curve" 0 "Magnitude of force kN"    ;xyplot axisoptions ylabel font "FvsD Curve" 0 "MS Shell Dlg 2,12,-1,5,75,0,0,0,0,0"     ;xyplot axisoptions xaxis active "FvsD Curve" 0 0;xyplot axisoptions yaxis deactive "FvsD Curve" 0 0      ;xyplot axisoptions xlabel font "FvsD Curve" 0 "MS Shell Dlg 2,12,-1,5,75,0,0,0,0,0"     ;xyplot axisoptions xlabel set "FvsD Curve" 0 "Displacement mm"  ;xyplot axisoptions xaxis deactive "FvsD Curve" 0 0      ;xyplot plotoptions title set "FvsD Curve" 0 ""  ;xyplot plotoptions title set "FvsD Curve" 0 ""  ;xyplot plotoptions legend on "FvsD Curve" 0     ;xyplot legend font "FvsD Curve" 0 "MS Shell Dlg 2,12,-1,5,75,0,0,0,0,0"
+toolbar button Abaqus   :
+toolbar endmenu
+toolbar endgroup
+toolbar hsubgroup 2D Window Options
+toolbar subgroup Axis Title
+toolbar text X Label    :options var string plot_x_axis_label {} ;read Session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Plot_x_Label.py
+toolbar text Y Label    :options var string plot_y_axis_label {} ;read Session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Plot_y_Label.py
+toolbar text Title Name :options var string enter_plot_title {}  ;read Session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Title_Name_Plot.py
+toolbar endgroup
+toolbar subgroup Legends
+toolbar button Hide All Legends :opt var string settingsfun hidelegend           ;read session "N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\DynamicStiffness\PlotSettings_v0.3.pyb"
+toolbar button Show All Legends :opt var string settingsfun showlegend           ;read session "N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\DynamicStiffness\PlotSettings_v0.3.pyb"
+toolbar button Random Colour    :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\curves_random_color.py
+toolbar endgroup
+toolbar endgroup
+toolbar hsubgroup Trim Curve
+toolbar subgroup Enter Range
+toolbar text Xmin       :options var string Xmin {}
+toolbar text Xmax       :options var string Xmax {}
+toolbar endgroup
+toolbar subgroup Enter Curve ID ( Single Value Only)
+toolbar text    :options var string CurveID {}   ;read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Trim_Curve.py
+toolbar endgroup
+toolbar endgroup
+toolbar subgroup Calculations
+toolbar text Curve ID ( For Range x-y Format)   :options var string CurveIDs {}
+toolbar endgroup
+toolbar hsubgroup 
+toolbar hsubgroup 
+toolbar button Displacement to Accelerations to G's     :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\AccelerationtoGs.py
+toolbar button SAE Filter 1981 - Unit System mmkms      :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\SAEfilter1981.py
+toolbar endgroup
+toolbar endgroup
+toolbar subgroup 
+toolbar button Forward Differentation   :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Differential_Curve.py
+toolbar button Integral :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\MACROS\META\Python_Script\Integral_Curve.py
+toolbar menu Mean 
+toolbar button All      :
+toolbar button Range    :`w[Window1]c1.y[y=max,from=75,to=100]`
+toolbar endmenu
+toolbar endgroup
+toolbar subgroup Axis, Plot and Datum Settings
+toolbar button Open "Plot Settings" Toolbar color=#FF0000       :toolbar open Plot Settings 2
+toolbar endgroup
+toolbar pagetab User Toolbars 
+toolbar button NVH_2D_Post_Toolbar      :toolbar open NVH 2D Post Processing
+toolbar button Statistical_Analysis     :toolbar open Statistical_Analysis
+toolbar button Fatigue_Event_Toolbar    :toolbar open Read Fatigue Results
+toolbar button Stiffness Calculator     :
+toolbar pagetab Reports 
+toolbar subgroup Crash PostProcessing and Report Generation
+toolbar button Frontal Impact color=#FF0000     :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\SCRIPTS\Crash\Frontal_Impact\Frontal_Report_Generation.ses
+toolbar button Side Impact color=#FF0000        :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\SCRIPTS\Crash\Side_Impact\Side_Crash_Analysis.ses
+toolbar button FMVSS214_Static color=#FF3300    :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\SCRIPTS\Crash\FMVSS214_Static\FMVSS214_Static.ses
+toolbar endgroup
+toolbar hsubgroup Bumper 
+toolbar menu Bumper PostProcess color=#FF0000 
+toolbar button Read Session File        :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\SCRIPTS\Crash\BUMPER\Bumper_StrokeForce_Template.ses
+toolbar button Overlay Session  :read session overlay existfile N:/750_Tower/CSEFEA/COSMA_ENGINEERING/CAE_UTILITY/SCRIPTS/Crash/BUMPER/Bumper_StrokeForce_Template.ses
+toolbar endmenu
+toolbar button Bumper Report Generation color=#FF0000   :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\SCRIPTS\Crash\BUMPER\Bumper_StrokeForce_AutoReport.ses
+toolbar endgroup
+toolbar subgroup Static Stiffness
+toolbar button Report Generation color=#FF0000  :read session N:\750_Tower\CSEFEA\COSMA_ENGINEERING\CAE_UTILITY\SCRIPTS\Stiffness\Static Stiffness\StaticStiffnessReport\Three_Combine_Deck_h3d_CalculatStiff_Output_Excel.py
+toolbar endgroup
+toolbar endtab
+toolbar hsubgroup Create Options
+toolbar text New 3D     :window create "{}"      ;window enable and act   ;window enable all       ;model active all;window bisync all
+toolbar text New 2D     :xyplot create {}
+toolbar text New Page   :page add {}
+toolbar endgroup
+toolbar hsubgroup Save 
+toolbar button Save Picture     :opt var filetext filter "(*.png)"       ;opt var filetext description "Filename" p0      ;write options saveworkspace enable              ;write options outputsize workspace 1456,980     ;write options outputsize specify 1250,730       ;write png "${p0}.png"
+toolbar button Save Project     :opt var filetext filter "(*.metadb)"    ;opt var filetext description "Save Project " p0 ;write options MetaDB version 16.0.0     ;write options Project compressed lossless       ;write options Project geomsave enable   ;write options Project dispsave enable   ;write options Project funcsave enable   ;write options Project vissave disable   ;write options Project reducedsave disable       ;write options Project metaxmlstylessave disable ;write options Project gensave enable    ;write options Project plotfloatprec disable     ;write options Project splitfiles disable;write options Project comment disable   ;write options Project comment "";write options Project selstate disable  ;write options Project userstate enable  ;write options Project curstate disable  ;write options Project varsave enable    ;write options Project scripts disable   ;write options Project sessions disable  ;write options Project nvhsave disable   ;write options Project sesoverlay disable;write options Project references disable;write options Project references 3dgeometry enable      ;write options Project references 3dresults enable       ;write options Project references 2dplot enable  ;write options Project typesave all      ;write options Project pagesave all      ;write project "label" "${p0}.metadb"
+toolbar menu Save Animation 
+toolbar button Save .gif        :opt var filetext filter "(*.gif)"       ;opt var filetext description "File Name " p0    ;write options saveworkspace enable      ;write options outputsize specify 1250,730       ;record movie forward loop 1 gif "${p0}.gif"
+toolbar button Save .avi        :opt var filetext filter "(*.avi)"       ;opt var filetext description "Filename" p0      ;write options saveworkspace enable      ;write options outputsize specify 1250,730       ;record avi quality 100  ;record avi quality 100  ;record movie forward loop 1 avi "${p0}.avi"
+toolbar endmenu
+toolbar button Save Session     :opt var filetext filter "(*.ses)"       ;opt var filetext description "Choose Filename" p0       ;session save suppress "${p0}.ses"
+toolbar endgroup

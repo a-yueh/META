@@ -1,0 +1,7 @@
+toolbar start Read Fatigue Results
+toolbar minmaxbuttons off
+toolbar button Read CSV :
+toolbar script # PYTHON script\nimport meta\nfrom meta import utils\nselected_files = utils.SelectOpenFile(1, 'CSV files (*.csv)')\nfor csv_file in selected_files:\n	#print(csv_file)\n	utils.MetaCommand('read onlyfun fefatigue "'+csv_file+'" all GeneralResult,Damage,MaxofTopBottom')
+toolbar button Sum of States    :
+toolbar script # PYTHON script\nimport meta\nfrom meta import results\nfrom meta import utils\nnumber_of_states = len(results.Resultsets(0)) - 1\nutils.MetaCommand('function create scalar "User Function" "1000000" "SUM(j, s$j.sf,1,'+str(number_of_states)+',1)"')\nutils.MetaCommand('options state '+str(number_of_states + 1))\nutils.MetaCommand('states winlock "MetaPost" 1-'+str(number_of_states))
+toolbar button Statistics       :multistats show elems   ;multistats states locked;multistats add advfilter elements add:Elements:centroid.func.scalar.max:>0:Keep All;window open multistats
